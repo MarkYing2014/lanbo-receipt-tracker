@@ -5,9 +5,7 @@ const nextConfig = {
     domains: ['images.clerk.dev', 'img.clerk.com'],
   },
   // Allow Convex and Clerk to be used in Edge runtime
-  experimental: {
-    serverComponentsExternalPackages: ['convex/server'],
-  },
+  serverExternalPackages: ['convex/server'],
 };
 
 export default nextConfig;

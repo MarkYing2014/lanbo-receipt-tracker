@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useQuery, useMutation } from "convex/react";
-import { api } from "@/convex/_generated/api";
+import { api } from "../../convex/_generated/api";
 import { useParams, useRouter } from "next/navigation";
 import { format } from "date-fns";
 import Link from "next/link";
@@ -144,15 +144,17 @@ export function ReceiptDetails({ receiptId, userId }: { receiptId: string; userI
       const parsedTotal = formData.total ? parseFloat(formData.total) : undefined;
       
       // Update receipt data
-      await updateReceipt({
-        receiptId: receipt._id as any,
-        merchant: formData.merchant || undefined,
-        date: formData.date || undefined,
-        total: parsedTotal,
-        category: formData.category || undefined,
-        items: formData.items,
-        status: "manual_edit",
-      });
+      if (receipt?._id) {
+        await updateReceipt({
+          receiptId: receipt._id,
+          merchant: formData.merchant || "",
+          date: formData.date || "",
+          total: parsedTotal,
+          category: formData.category || "",
+          items: formData.items,
+          status: "manual_edit"
+        });
+      }
       
       toast({
         title: "Receipt updated",

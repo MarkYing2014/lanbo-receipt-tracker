@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { FileText, Activity, Upload, Clock } from "lucide-react";
 import { useQuery } from "convex/react";
-import { api } from "@/convex/_generated/api";
+import { api } from "../../convex/_generated/api";
 
 export function UsageStats({ userId }: { userId: string }) {
   // Fetching user plan and usage data

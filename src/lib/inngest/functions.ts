@@ -1,7 +1,7 @@
 import { inngest } from "./client";
 import type { Events } from "./client";
 import { ConvexHttpClient } from "convex/browser";
-import { api } from "@/convex/_generated/api";
+import { api } from "../../../convex/_generated/api";
 
 // Initialize Convex client
 const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL || "");
@@ -66,13 +66,17 @@ export const extractReceiptData = inngest.createFunction(
         });
       });
       
-      // Emit a receipt/extracted event
-      return await step.sendEvent("receipt/extracted", {
+      // Send the extracted data event with all receipt information
+      await inngest.send({
+        name: "receipt/extracted",
         data: {
+          merchant: extractedData.merchant,
+          date: extractedData.date,
+          total: extractedData.total,
+          items: extractedData.items,
           userId,
           receiptId,
-          ...extractedData
-        }
+        },
       });
     } catch (error) {
       console.error("Error extracting receipt data:", error);
@@ -86,13 +90,14 @@ export const extractReceiptData = inngest.createFunction(
         });
       });
       
-      // Emit a receipt/extraction-failed event
-      return await step.sendEvent("receipt/extraction-failed", {
+      // Emit a receipt/error event
+      return await step.sendEvent("receipt/error", {
+        name: "receipt/error",
         data: {
           userId,
           receiptId,
-          errorMessage: error instanceof Error ? error.message : "Unknown error during extraction"
-        }
+          errorMessage: error instanceof Error ? error.message : "Unknown error occurred",
+        },
       });
     }
   }

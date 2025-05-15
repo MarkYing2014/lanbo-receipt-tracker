@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQuery } from "convex/react";
-import { api } from "@/convex/_generated/api";
+import { api } from "../../convex/_generated/api";
 import { startOfMonth, endOfMonth, format } from "date-fns";
 
 export function ExpenseSummary({ userId }: { userId: string }) {
