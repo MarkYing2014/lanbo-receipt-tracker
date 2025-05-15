@@ -1,0 +1,6 @@
+{
+  "functions": "./convex",
+  "origins": [
+    "http://localhost:3000"
+  ]
+}
