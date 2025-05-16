@@ -1,10 +1,15 @@
 import { ClientReceiptDetailsPage } from "@/components/client-receipt-details-page";
 
+export interface PageParams {
+  receiptId: string;
+}
+
 // Server component that renders a client component for receipt details
 export default function ReceiptDetailsPage({
   params,
 }: {
-  params: { receiptId: string };
+  params: PageParams;
 }) {
-  return <ClientReceiptDetailsPage receiptId={params.receiptId} />;
+  const { receiptId } = params;
+  return <ClientReceiptDetailsPage receiptId={receiptId} />;
 }
