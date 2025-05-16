@@ -1,7 +1,7 @@
 import { mutation, query } from "./_generated/server";
 import { ConvexError, v } from "convex/values";
-import { StorageReader } from "./_generated/server";
 import { getUser } from "./helpers";
+import { StorageReader } from "convex/server";
 
 // Generate upload URL for receipt PDFs
 export const generateUploadUrl = mutation({
