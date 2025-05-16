@@ -1,14 +1,10 @@
 import { NextResponse } from "next/server";
-import { ConvexHttpClient } from "convex/browser";
-import { api } from "../../../../convex/_generated/api";
-import { Id } from "../../../../convex/_generated/dataModel";
 
-// Initialize Convex client
-const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL || "");
+// This is a direct API approach for testing Inngest without Convex integration
 
 /**
  * Test endpoint to simulate a receipt upload and processing
- * This lets you test the Convex and Inngest integration without uploading real PDFs
+ * This is a MOCK implementation that doesn't use Convex, just for testing Inngest
  */
 export async function POST(request: Request) {
   try {
@@ -24,68 +20,48 @@ export async function POST(request: Request) {
     
     console.log("Test receipt data:", { userId, merchant, date, total, items });
     
+    // Create a mock receipt ID (no actual Convex interaction)
+    const mockReceiptId = `mock-receipt-${Date.now()}`;
+    
+    console.log("Created mock receipt with ID:", mockReceiptId);
+        
+    // Send a test event directly to Inngest
     try {
-      // 1. Create a receipt in Convex with required fields
-      console.log("Creating receipt with userId:", userId);
+      // Send event to the Inngest API route directly
+      console.log("Sending event to Inngest API route");
       
-      // Include the required fileId field
-      const receiptId = await convex.mutation(api.receipts.createReceipt, {
-        userId,
-        fileId: "test-file-123" as unknown as Id<"_storage">, // Required field
-        fileName: "test-receipt.pdf",
-      });
-      
-      console.log("Test receipt created with ID:", receiptId);
-      
-      if (!receiptId) {
-        throw new Error("Receipt ID was not returned from Convex");
-      }
-      
-      // 2. Update the receipt with the provided data
-      await convex.mutation(api.receipts.updateReceiptData, {
-        receiptId: receiptId as unknown as Id<"receipts">,
-        merchant,
-        date,
-        total: parseFloat(total || "0"),
-        items: items || [],
-        status: "completed"
-      });
-      
-      console.log("Test receipt updated with provided data");
-      
-      // 3. Try to send a test event to Inngest if we have the API route
-      try {
-        await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/inngest/send-event`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
+      const eventResponse = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/inngest/send-event`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          eventName: "receipt/uploaded",
+          eventData: {
+            userId,
+            receiptId: mockReceiptId,
+            fileId: "mock-file-id", // Required by the event type
+            merchant,
+            date,
+            total: parseFloat(total || "0"),
+            items: items || [],
+            mockData: true // Flag to indicate this is test data
           },
-          body: JSON.stringify({
-            eventName: "receipt/extracted",
-            eventData: {
-              receiptId,
-              userId,
-              merchant,
-              date,
-              total: parseFloat(total || "0"),
-              items: items || []
-            },
-          }),
-        });
-        console.log("Test event sent for receipt processing");
-      } catch (inngestError) {
-        console.warn("Inngest event sending failed, but receipt was created:", inngestError);
-        // We won't fail the overall request if just the event sending fails
-      }
+        }),
+      });
+      
+      const result = await eventResponse.json();
+      console.log("Inngest API response:", result);
       
       return NextResponse.json({
         success: true,
-        message: "Test receipt created and updated with provided data",
-        receiptId,
+        message: "Test receipt event sent to Inngest",
+        receiptId: mockReceiptId,
+        inngestResult: result
       });
-    } catch (convexError) {
-      console.error("Error in Convex operations:", convexError);
-      throw new Error(`Convex operation failed: ${convexError instanceof Error ? convexError.message : String(convexError)}`);
+    } catch (inngestError) {
+      console.error("Error sending Inngest event:", inngestError);
+      throw new Error(`Inngest event failed: ${inngestError instanceof Error ? inngestError.message : String(inngestError)}`);
     }
   } catch (error) {
     console.error("Error creating test receipt:", error);

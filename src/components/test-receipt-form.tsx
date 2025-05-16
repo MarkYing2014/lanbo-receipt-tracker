@@ -37,46 +37,62 @@ export function TestReceiptForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    console.log('⏳ Form submitted, creating test receipt...');
     
     try {
       // Parse the items JSON
       let parsedItems: TestReceiptItem[];
       try {
         parsedItems = JSON.parse(items);
+        console.log('✅ Successfully parsed items JSON:', parsedItems);
       } catch (error) {
         toast.error("Invalid items JSON format");
-        console.error("Failed to parse items JSON:", error);
+        console.error("❌ Failed to parse items JSON:", error);
         setIsLoading(false);
         return;
       }
       
-      // Send the test data to the API
+      // Log the data we're about to send
+      const requestData = {
+        userId: user?.id || "test-user-123",
+        merchant,
+        date,
+        total,
+        items: parsedItems,
+      };
+      console.log('📤 Sending test receipt data:', requestData);
+      
+      // Send the test data to the API with full error capture
+      console.log('📡 Sending request to /api/test-receipt');
       const response = await fetch("/api/test-receipt", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          userId: user?.id || "test-user-123",
-          merchant,
-          date,
-          total,
-          items: parsedItems,
-        }),
+        body: JSON.stringify(requestData),
       });
       
+      console.log('📡 Response status:', response.status);
       const data = await response.json();
+      console.log('📥 Response data:', data);
       
       if (!response.ok) {
-        throw new Error(data.error || "Failed to create test receipt");
+        console.error('❌ Server returned error:', data);
+        throw new Error(data.details || data.error || "Failed to create test receipt");
       }
       
       toast.success("Test receipt created successfully!");
-      console.log("Receipt created:", data.receiptId);
+      console.log("✅ Receipt created with ID:", data.receiptId);
       
     } catch (error) {
-      toast.error("Failed to create test receipt");
-      console.error("Error creating test receipt:", error);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      toast.error(`Failed to create test receipt: ${errorMessage}`);
+      console.error("❌ Error creating test receipt:", error);
+      
+      // Display full detailed error to help debugging
+      console.error('📌 DETAILED ERROR INFO:');
+      console.error('- Message:', errorMessage);
+      console.error('- Stack:', error instanceof Error ? error.stack : 'No stack available');
     } finally {
       setIsLoading(false);
     }

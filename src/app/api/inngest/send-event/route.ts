@@ -1,10 +1,22 @@
 import { Inngest } from "inngest";
 import { NextResponse } from "next/server";
 
-// Simplest possible Inngest client with minimal configuration
+// Create a fully configured Inngest client for this API route
 const apiInngest = new Inngest({ 
   id: "lanbo-receipt-tracker",
+  eventKey: process.env.INNGEST_EVENT_KEY,
+  signingKey: process.env.INNGEST_SIGNING_KEY,
+  deploymentURL: process.env.INNGEST_DEPLOYMENT_URL || 
+    (process.env.NODE_ENV === "production" 
+      ? "https://lanbo-receipt-tracker.vercel.app" 
+      : "http://localhost:3000")
 });
+
+// Log configuration for debugging
+console.log("Inngest client configured with event key prefix:", 
+  process.env.INNGEST_EVENT_KEY?.substring(0, 5) || "undefined");
+console.log("Deployment URL:", process.env.INNGEST_DEPLOYMENT_URL || 
+  (process.env.NODE_ENV === "production" ? "[production URL]" : "[development URL]"));
 
 /**
  * API route to send Inngest events
