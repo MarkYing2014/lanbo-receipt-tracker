@@ -1,7 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { ReceiptList } from "@/components/receipt-list";
+import { TestReceiptForm } from "@/components/test-receipt-form";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export function ClientReceiptsPage() {
   // Get the user from Clerk's client-side hook
@@ -21,16 +24,34 @@ export function ClientReceiptsPage() {
     );
   }
   
+  const [activeTab, setActiveTab] = useState("receipts");
+
   return (
     <div className="space-y-8">
       <div>
         <h2 className="text-3xl font-bold tracking-tight">Receipts</h2>
         <p className="text-muted-foreground">
-          View and manage all your uploaded receipts.
+          View and manage all your uploaded receipts. 
+          Use the test tab for generating sample data.
         </p>
       </div>
       
-      <ReceiptList userId={userId} />
+      <Tabs defaultValue="receipts" value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <TabsList className="mb-6">
+          <TabsTrigger value="receipts">My Receipts</TabsTrigger>
+          <TabsTrigger value="test">Test Receipt Data</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="receipts">
+          <ReceiptList userId={userId} />
+        </TabsContent>
+        
+        <TabsContent value="test">
+          <div className="max-w-2xl mx-auto">
+            <TestReceiptForm />
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
