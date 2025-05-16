@@ -383,11 +383,17 @@ export function ReceiptDetails({ receiptId, userId }: { receiptId: string; userI
               </CardHeader>
               <CardContent>
                 <div className="aspect-[3/4] relative bg-muted rounded-md overflow-hidden">
-                  <iframe
-                    src={file.url}
-                    className="absolute inset-0 w-full h-full"
-                    title="Receipt PDF"
-                  />
+                  {file.url ? (
+                    <iframe
+                      src={file.url}
+                      className="absolute inset-0 w-full h-full"
+                      title="Receipt PDF"
+                    />
+                  ) : (
+                    <div className="flex items-center justify-center h-full">
+                      <p className="text-muted-foreground">PDF preview not available</p>
+                    </div>
+                  )}
                 </div>
               </CardContent>
               <CardFooter>
