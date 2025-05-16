@@ -1,5 +1,11 @@
-import { inngest } from "@/lib/inngest/client";
+import { Inngest } from "inngest";
 import { NextResponse } from "next/server";
+
+// Create a dedicated Inngest client for this API route
+const apiInngest = new Inngest({ 
+  id: "lanbo-receipt-tracker",
+  deploymentURL: "https://lanbo-receipt-tracker.vercel.app"
+});
 
 /**
  * API route to send Inngest events
@@ -17,8 +23,8 @@ export async function POST(request: Request) {
       );
     }
     
-    // Send event to Inngest
-    await inngest.send({
+    // Send event to Inngest using the dedicated client
+    await apiInngest.send({
       name: eventName,
       data: eventData,
     });

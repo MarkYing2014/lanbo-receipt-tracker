@@ -1,13 +1,19 @@
-import { inngest } from "./client";
+import { Inngest } from "inngest";
 import type { Events } from "./client";
 import { ConvexHttpClient } from "convex/browser";
 import { api } from "../../../convex/_generated/api";
+
+// Create a dedicated Inngest client for functions
+const functionInngest = new Inngest({ 
+  id: "lanbo-receipt-tracker",
+  deploymentURL: "https://lanbo-receipt-tracker.vercel.app"
+});
 
 // Initialize Convex client
 const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL || "");
 
 // Function to extract receipt data using AI
-export const extractReceiptData = inngest.createFunction(
+export const extractReceiptData = functionInngest.createFunction(
   { id: "extract-receipt-data" },
   { event: "receipt/uploaded" },
   async ({ event, step }) => {
@@ -67,7 +73,7 @@ export const extractReceiptData = inngest.createFunction(
       });
       
       // Send the extracted data event with all receipt information
-      await inngest.send({
+      await functionInngest.send({
         name: "receipt/extracted",
         data: {
           merchant: extractedData.merchant,
