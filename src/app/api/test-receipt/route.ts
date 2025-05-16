@@ -27,15 +27,13 @@ export async function POST(request: Request) {
         
     // Send a test event directly to Inngest
     try {
-      // Send event to the Inngest API route directly
+      // Send event to the Inngest API route with improved error handling
       console.log("Sending event to Inngest API route");
       
-      const eventResponse = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/inngest/send-event`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      // First verify if the Inngest API route exists by making a test request
+      try {
+        // Prepare the event data
+        const eventData = {
           eventName: "receipt.created",
           eventData: {
             userId,
@@ -47,11 +45,40 @@ export async function POST(request: Request) {
             items: items || [],
             mockData: true // Flag to indicate this is test data
           },
-        }),
-      });
-      
-      const result = await eventResponse.json();
-      console.log("Inngest API response:", result);
+        };
+        
+        // Log the actual URL we're calling
+        const apiUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/inngest/send-event`;
+        console.log("Calling API at URL:", apiUrl);
+        console.log("With data:", JSON.stringify(eventData, null, 2));
+        
+        // Make the request
+        const eventResponse = await fetch(apiUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(eventData),
+        });
+        
+        // Check if response is OK
+        if (!eventResponse.ok) {
+          console.error(`API returned status: ${eventResponse.status}`);
+          const responseText = await eventResponse.text();
+          console.error("Response:", responseText);
+          throw new Error(`API request failed with status ${eventResponse.status}: ${responseText}`);
+        }
+        
+        // Try to parse JSON response
+        const contentType = eventResponse.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+          const text = await eventResponse.text();
+          console.error("Non-JSON response:", text);
+          throw new Error("API did not return JSON");
+        }
+        
+        const result = await eventResponse.json();
+        console.log("Inngest API response:", result);
       
       return NextResponse.json({
         success: true,
