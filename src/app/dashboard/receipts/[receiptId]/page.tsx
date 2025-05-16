@@ -1,16 +1,10 @@
-import { auth } from "@clerk/nextjs";
-import { ReceiptDetails } from "@/components/receipt-details";
+import { ClientReceiptDetailsPage } from "@/components/client-receipt-details-page";
 
+// Server component that renders a client component for receipt details
 export default function ReceiptDetailsPage({
   params
 }: {
   params: { receiptId: string }
 }) {
-  const { userId } = auth();
-  
-  if (!userId) {
-    return null;
-  }
-
-  return <ReceiptDetails receiptId={params.receiptId} userId={userId} />;
+  return <ClientReceiptDetailsPage receiptId={params.receiptId} />;
 }

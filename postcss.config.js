@@ -1,7 +1,8 @@
 module.exports = {
   plugins: {
     'postcss-import': {},
-    '@tailwindcss/postcss': {},
+    'tailwindcss/nesting': {},
+    'tailwindcss': {},
     'autoprefixer': {},
     'postcss-focus-visible': {},
     'postcss-flexbugs-fixes': {},
@@ -12,7 +13,7 @@ module.exports = {
       stage: 3,
       features: {
         'custom-properties': false,
-        'nesting-rules': true,
+        'nesting-rules': false,
       },
     },
   },

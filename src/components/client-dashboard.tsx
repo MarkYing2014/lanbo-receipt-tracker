@@ -75,7 +75,7 @@ export function ClientDashboard() {
         
         {/* Quick links section */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
-          <Link href="/dashboard/receipts" className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow group">
+          <Link href="/dashboard/receipts" className="bg-white p-4 rounded-lg shadow-sm border border-blue-100 hover:shadow-md transition-shadow group">
             <div className="flex flex-col items-center text-center gap-2">
               <FileText className="h-8 w-8 text-blue-500 group-hover:text-blue-600" />
               <h3 className="font-semibold">All Receipts</h3>
@@ -83,7 +83,7 @@ export function ClientDashboard() {
             </div>
           </Link>
           
-          <Link href="/dashboard/upload" className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow group">
+          <Link href="/dashboard/upload" className="bg-white p-4 rounded-lg shadow-sm border border-blue-100 hover:shadow-md transition-shadow group">
             <div className="flex flex-col items-center text-center gap-2">
               <PlusCircle className="h-8 w-8 text-green-500 group-hover:text-green-600" />
               <h3 className="font-semibold">Upload</h3>
@@ -91,7 +91,7 @@ export function ClientDashboard() {
             </div>
           </Link>
           
-          <Link href="/dashboard/analytics" className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow group">
+          <Link href="/dashboard/analytics" className="bg-white p-4 rounded-lg shadow-sm border border-blue-100 hover:shadow-md transition-shadow group">
             <div className="flex flex-col items-center text-center gap-2">
               <TrendingUp className="h-8 w-8 text-purple-500 group-hover:text-purple-600" />
               <h3 className="font-semibold">Analytics</h3>
@@ -99,7 +99,7 @@ export function ClientDashboard() {
             </div>
           </Link>
           
-          <Link href="/dashboard/settings" className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow group">
+          <Link href="/dashboard/settings" className="bg-white p-4 rounded-lg shadow-sm border border-blue-100 hover:shadow-md transition-shadow group">
             <div className="flex flex-col items-center text-center gap-2">
               <Settings className="h-8 w-8 text-gray-500 group-hover:text-gray-600" />
               <h3 className="font-semibold">Settings</h3>

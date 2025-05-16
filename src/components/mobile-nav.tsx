@@ -5,7 +5,7 @@ import { useState } from "react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 
 export function MobileNav() {
   const [open, setOpen] = useState(false);
@@ -23,6 +23,7 @@ export function MobileNav() {
         </Button>
       </SheetTrigger>
       <SheetContent side="bottom" className="md:hidden">
+        <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
         <nav className="flex flex-col gap-4 py-4">
           <Link
             href="/dashboard"
