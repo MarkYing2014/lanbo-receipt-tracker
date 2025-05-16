@@ -18,7 +18,7 @@ const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL || "");
 // Function to extract receipt data using AI
 export const extractReceiptData = functionInngest.createFunction(
   { id: "extract-receipt-data" },
-  { event: "receipt/uploaded" },
+  { event: "receipt.created" },
   async ({ event, step }) => {
     const { userId, receiptId, fileId } = event.data;
     
@@ -77,7 +77,7 @@ export const extractReceiptData = functionInngest.createFunction(
       
       // Send the extracted data event with all receipt information
       await functionInngest.send({
-        name: "receipt/extracted",
+        name: "receipt.extracted",
         data: {
           merchant: extractedData.merchant,
           date: extractedData.date,
@@ -99,9 +99,9 @@ export const extractReceiptData = functionInngest.createFunction(
         });
       });
       
-      // Emit a receipt/error event
-      return await step.sendEvent("receipt/error", {
-        name: "receipt/error",
+      // Emit a receipt.error event
+      return await step.sendEvent("receipt.error", {
+        name: "receipt.error",
         data: {
           userId,
           receiptId,

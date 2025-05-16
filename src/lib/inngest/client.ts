@@ -16,7 +16,7 @@ export const inngest = new Inngest({
 // Define event types for our application
 export type Events = {
   // Event triggered when a new receipt is uploaded
-  "receipt/uploaded": {
+  "receipt.created": { // Changed from receipt/uploaded to match Inngest dashboard
     data: {
       userId: string;
       receiptId: string;
@@ -24,7 +24,7 @@ export type Events = {
     };
   };
   // Event triggered when receipt data extraction is complete
-  "receipt/extracted": {
+  "receipt.extracted": { // Changed from receipt/extracted
     data: {
       userId: string;
       receiptId: string;
@@ -40,7 +40,7 @@ export type Events = {
     };
   };
   // Event triggered when receipt data extraction fails
-  "receipt/extraction-failed": {
+  "receipt.extraction.failed": { // Changed from receipt/extraction-failed
     data: {
       userId: string;
       receiptId: string;
