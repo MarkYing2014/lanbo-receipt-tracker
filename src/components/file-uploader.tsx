@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Upload, Check, AlertCircle, FileText, ArrowRight, Loader2 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/components/ui/use-toast";
+import { inngest } from "@/lib/inngest/client";
 
 export function FileUploader({ userId }: { userId: string }) {
   const [file, setFile] = useState<File | null>(null);
@@ -108,6 +109,24 @@ export function FileUploader({ userId }: { userId: string }) {
       setUploadProgress(100);
       setUploadSuccess(true);
       setUploading(false);
+      
+      // Send the receipt/uploaded event to Inngest to trigger processing
+      try {
+        await inngest.send({
+          name: "receipt/uploaded",
+          data: {
+            userId,
+            receiptId,
+            fileId: storageId,
+          },
+        });
+        
+        console.log("Inngest event sent: receipt/uploaded");
+      } catch (inngestError) {
+        console.error("Failed to send Inngest event:", inngestError);
+        // We don't want to show an error to the user if Inngest fails
+        // The receipt was still uploaded successfully
+      }
       
       toast({
         title: "Receipt uploaded successfully",
