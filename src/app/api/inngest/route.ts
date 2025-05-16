@@ -2,11 +2,13 @@ import { serve } from "inngest/next";
 import { Inngest } from "inngest";
 import { extractReceiptData } from "@/lib/inngest/functions";
 
-// Create a dedicated Inngest client for the API route
-// This ensures it has the correct deployment URL at runtime rather than build time
+// Create a dedicated Inngest client for the API route using environment variables
 const apiInngest = new Inngest({ 
   id: "lanbo-receipt-tracker",
-  deploymentURL: "https://lanbo-receipt-tracker.vercel.app"
+  // Use environment variables for configuration
+  eventKey: process.env.INNGEST_EVENT_KEY,
+  signingKey: process.env.INNGEST_SIGNING_KEY,
+  deploymentURL: process.env.INNGEST_DEPLOYMENT_URL
 });
 
 // Create an API that serves the Inngest functions

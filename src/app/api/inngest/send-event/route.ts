@@ -1,10 +1,13 @@
 import { Inngest } from "inngest";
 import { NextResponse } from "next/server";
 
-// Create a dedicated Inngest client for this API route
+// Create a dedicated Inngest client for this API route using environment variables
 const apiInngest = new Inngest({ 
   id: "lanbo-receipt-tracker",
-  deploymentURL: "https://lanbo-receipt-tracker.vercel.app"
+  // Use environment variables for configuration
+  eventKey: process.env.INNGEST_EVENT_KEY,
+  signingKey: process.env.INNGEST_SIGNING_KEY,
+  deploymentURL: process.env.INNGEST_DEPLOYMENT_URL
 });
 
 /**

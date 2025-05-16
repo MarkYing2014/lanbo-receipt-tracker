@@ -1,17 +1,16 @@
 import { Inngest } from "inngest";
 
-// Create an Inngest client
+// Create an Inngest client using environment variables
 export const inngest = new Inngest({ 
   id: "lanbo-receipt-tracker",
-  // These will be pulled from environment variables in production
-  // INNGEST_EVENT_KEY and INNGEST_SIGNING_KEY
-  
-  // Always provide a deployment URL
-  // In development, this will be http://localhost:3000
-  // In production, hardcoding the expected deployment URL
-  deploymentURL: process.env.NODE_ENV === "production" 
-    ? "https://lanbo-receipt-tracker.vercel.app" 
-    : "http://localhost:3000",
+  // Use environment variables for configuration
+  eventKey: process.env.INNGEST_EVENT_KEY,
+  signingKey: process.env.INNGEST_SIGNING_KEY,
+  // For deploymentURL, use environment variable with fallback based on environment
+  deploymentURL: process.env.INNGEST_DEPLOYMENT_URL || 
+    (process.env.NODE_ENV === "production" 
+      ? "https://lanbo-receipt-tracker.vercel.app" 
+      : "http://localhost:3000")
 });
 
 // Define event types for our application

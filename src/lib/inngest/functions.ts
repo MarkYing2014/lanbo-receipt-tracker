@@ -3,10 +3,13 @@ import type { Events } from "./client";
 import { ConvexHttpClient } from "convex/browser";
 import { api } from "../../../convex/_generated/api";
 
-// Create a dedicated Inngest client for functions
+// Create a dedicated Inngest client for functions using environment variables
 const functionInngest = new Inngest({ 
   id: "lanbo-receipt-tracker",
-  deploymentURL: "https://lanbo-receipt-tracker.vercel.app"
+  // Use environment variables for configuration
+  eventKey: process.env.INNGEST_EVENT_KEY,
+  signingKey: process.env.INNGEST_SIGNING_KEY,
+  deploymentURL: process.env.INNGEST_DEPLOYMENT_URL
 });
 
 // Initialize Convex client
