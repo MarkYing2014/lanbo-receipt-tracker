@@ -408,8 +408,7 @@ export function ReceiptDetails({ receiptId, userId }: { receiptId: string; userI
                   </a>
                 ) : (
                   <span className="text-sm text-muted-foreground">PDF download not available</span>
-                )
-                </a>
+                )}
               </CardFooter>
             </Card>
           )}
