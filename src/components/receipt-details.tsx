@@ -397,13 +397,18 @@ export function ReceiptDetails({ receiptId, userId }: { receiptId: string; userI
                 </div>
               </CardContent>
               <CardFooter>
-                <a 
-                  href={file.url} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-sm text-primary hover:underline"
-                >
-                  Open PDF in new tab
+                {file.url ? (
+                  <a 
+                    href={file.url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-sm text-primary hover:underline"
+                  >
+                    Open PDF in new tab
+                  </a>
+                ) : (
+                  <span className="text-sm text-muted-foreground">PDF download not available</span>
+                )
                 </a>
               </CardFooter>
             </Card>
