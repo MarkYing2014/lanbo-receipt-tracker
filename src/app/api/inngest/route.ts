@@ -2,17 +2,21 @@ import { serve } from "inngest/next";
 import { Inngest } from "inngest";
 import { extractReceiptData } from "@/lib/inngest/functions";
 
-// Create a dedicated Inngest client for the API route using environment variables
-const apiInngest = new Inngest({ 
-  id: "lanbo-receipt-tracker",
-  // Use environment variables for configuration
-  eventKey: process.env.INNGEST_EVENT_KEY,
-  signingKey: process.env.INNGEST_SIGNING_KEY,
-  deploymentURL: process.env.INNGEST_DEPLOYMENT_URL
-});
+// Create the simplest possible Inngest client
+const inngest = new Inngest({ id: "lanbo-receipt-tracker" });
 
-// Create an API that serves the Inngest functions
+// Create a test function directly in this file
+const helloWorld = inngest.createFunction(
+  { id: "hello-world" },
+  { event: "test/hello.world" },
+  async ({ event, step }) => {
+    await step.sleep("wait-a-moment", "1s"); // Use proper duration format
+    return { message: "Hello, World!" };
+  }
+);
+
+// Create an API that serves the Inngest functions with explicit options
 export const { GET, POST, PUT } = serve({
-  client: apiInngest,
-  functions: [extractReceiptData],
+  client: inngest, // Use the correct client name
+  functions: [extractReceiptData, helloWorld],
 });
